@@ -2,11 +2,16 @@ import { useState } from 'react'
 import { K } from '../utils.js'
 import { WA, TILL, CARD_LINK } from '../config.js'
 
+// While testing, '' works because Vite forwards /api to the backend.
+// When the backend is online, set VITE_API_URL to its address.
+const API = import.meta.env.VITE_API_URL || ''
+
 export default function Checkout({ open, lines, total, onClose, onOrderSent }) {
   const [form, setForm] = useState({ name: '', phone: '', address: '', code: '' })
   const [method, setMethod] = useState('mpesa')   // 'mpesa' | 'card' | 'cod'
   const [error, setError] = useState('')
-  const [sent, setSent] = useState(false)
+  const [sent, setSent] = useState(null)   // after a successful order: { id, waUrl }
+  const [busy, setBusy] = useState(false)
 
   if (!open) return null
 
@@ -18,8 +23,8 @@ export default function Checkout({ open, lines, total, onClose, onOrderSent }) {
     : method === 'card' ? (CARD_LINK ? 'Pay by card' : 'Card payments coming soon')
     : 'Place order'
 
-  function place() {
-    if (!lines.length) return
+  async function place() {
+    if (!lines.length || busy) return
     const code = form.code.trim().toUpperCase()
     if (!form.name.trim() || !form.phone.trim() || !form.address.trim()) {
       return setError('Enter your name, phone number and delivery area.')
@@ -34,18 +39,40 @@ export default function Checkout({ open, lines, total, onClose, onOrderSent }) {
       return
     }
 
-    const items = lines.map((l) => `• ${l.qty} x ${l.name} (${K(l.now * l.qty)})`).join('\n')
-    const how = method === 'mpesa' ? `M-Pesa, code ${code}` : 'Cash on delivery'
-    const msg =
-      `Hello Easy Link Accessories, I’d like to order:\n${items}\n\n` +
-      `Total: ${K(total)}\nName: ${form.name}\nPhone: ${form.phone}\n` +
-      `Delivery: ${form.address}\nPayment: ${how}`
-    window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`, '_blank')
-    onOrderSent()
-    setSent(true)
+    setBusy(true)
+    try {
+      // 1. Save the order on our backend
+      const res = await fetch(`${API}/api/orders`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: form.name, phone: form.phone, address: form.address,
+          method, mpesaCode: code,
+          items: lines.map((l) => ({ key: l.key, qty: l.qty })),
+        }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Could not save your order.')
+
+      // 2. Prepare the WhatsApp message (the customer taps a button to send it)
+      const items = lines.map((l) => `• ${l.qty} x ${l.name} (${K(l.now * l.qty)})`).join('\n')
+      const how = method === 'mpesa' ? `M-Pesa, code ${code}` : 'Cash on delivery'
+      const msg =
+        `Hello Easy Link Accessories, my order number is ${data.orderId}.\n${items}\n\n` +
+        `Total: ${K(data.total)}\nName: ${form.name}\nPhone: ${form.phone}\n` +
+        `Delivery: ${form.address}\nPayment: ${how}`
+      setSent({ id: data.orderId, waUrl: `https://wa.me/${WA}?text=${encodeURIComponent(msg)}` })
+      onOrderSent()
+    } catch (e) {
+      setError(e.message === 'Failed to fetch'
+        ? 'Could not reach the shop server. Please try again, or order on WhatsApp.'
+        : e.message)
+    } finally {
+      setBusy(false)
+    }
   }
 
-  function close() { setSent(false); onClose() }
+  function close() { setSent(null); onClose() }
 
   return (
     <div id="co" className="open" role="dialog" aria-label="Checkout">
@@ -54,9 +81,11 @@ export default function Checkout({ open, lines, total, onClose, onOrderSent }) {
 
         {sent ? (
           <div>
-            <h2>Order sent</h2>
-            <p>Thank you! We will confirm your order and delivery time on WhatsApp shortly.</p>
-            <button className="btn gold" onClick={close}>Back to shop</button>
+            <h2>Order received</h2>
+            <p>Thank you! Your order number is <b>{sent.id}</b>.</p>
+            <p>Tap the button to send your order details to us on WhatsApp. We will confirm your delivery time there.</p>
+            <a className="btn gold" href={sent.waUrl} target="_blank" rel="noopener noreferrer">Send on WhatsApp</a>
+            <p><button className="btn" onClick={close}>Back to shop</button></p>
           </div>
         ) : (
           <div>
@@ -95,8 +124,8 @@ export default function Checkout({ open, lines, total, onClose, onOrderSent }) {
             {method === 'mpesa' && (
               <div className="box">
                 <p>
-                  1. Open M-Pesa and choose <b> → Send Money </b>.<br />
-                  2. Mpesa Number: <b>+254727093932</b><br />
+                  1. Open M-Pesa and choose <b>Send Money </b>.<br />
+                  2. M-Pesa Number: <b> +254 727 093932</b><br />
                   3. Amount: <b>{K(total)}</b><br />
                   4. Enter the confirmation code from the SMS below.
                 </p>
@@ -112,7 +141,7 @@ export default function Checkout({ open, lines, total, onClose, onOrderSent }) {
             )}
 
             <p className="err" role="alert">{error}</p>
-            <button className="btn gold full" onClick={place} disabled={cardNotReady}>{label}</button>
+            <button className="btn gold full" onClick={place} disabled={cardNotReady || busy}>{busy ? 'Sending…' : label}</button>
           </div>
         )}
       </div>

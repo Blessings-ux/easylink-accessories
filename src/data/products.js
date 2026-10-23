@@ -32,5 +32,5 @@ const rows = [
 ]
 
 export const products = rows.map(([key, cat, name, price, ico], id) => ({
-  id, cat, name, brand: 'Easy Link', was: price, now: price, sale: false, ico, image: `/products/${key}.jpg`,
+  id, key, cat, name, brand: 'Easy Link', was: price, now: price, sale: false, ico, image: `/products/${key}.jpg`,
 }))
