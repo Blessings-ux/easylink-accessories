@@ -6,8 +6,7 @@ export default function VisitStore() {
       <div className="wrap">
         <div className="visit">
           <div>
-            <h2>Visit our store</h2>
-            <p>Walk in, confirm your product and get help with warranty. Add your address here.</p>
+            <h2>CONTACT US</h2>
           </div>
           <div className="social">
             <a href={`https://wa.me/${WA}`} target="_blank" rel="noopener noreferrer" aria-label="Chat with us on WhatsApp">
