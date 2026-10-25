@@ -35,10 +35,10 @@ const rows = [
   ['usbc-hub-7in1', 'Hubs & docks', '7-in-1 USB-C Hub', 4500, '🧩'],  // estimate, confirm your price
   ['wireless-mouse', 'Computer accessories', 'Wireless Mouse', 1500, '🖱️'],  // researched: basic wireless mice KSh 700-3,000; Logitech M170 ~KSh 1,400-1,600
   ['googlechrome-cast-tv-and-remote', 'TV & streaming', 'Google Chromecast with Google TV and Remote', 9500, '📺'],  // researched: Phoneplace Kenya listing (HD model)
-  ['iphone-case', 'Phone cases', 'Premium iPhone Case', 1500, '📱'],  // estimate, confirm your price
-  ['case-with-car-logos', 'Phone cases', 'Phone Case with Car Logos', 1500, '📱'],  // researched: Kenyan phone cases usually KSh 500-2,500
-  ['samsungs', 'Phones', 'Samsung Galaxy Smartphones', 32000, '📱'],  // researched: "from" price, e.g. Galaxy A26 ~KSh 32,000-35,000; S25 starts ~KSh 108,000. Set per model
-  ['iphones', 'Phones', 'iPhones', 105000, '📱'],  // researched: "from" price, iPhone 16 128GB starts ~KSh 105,000. Set per model
+  ['samsungs', 'Phones & cases', 'Samsung Galaxy Smartphones', 32000, '📱'],  // researched: "from" price, e.g. Galaxy A26 ~KSh 32,000-35,000; S25 starts ~KSh 108,000. Set per model
+  ['iphones', 'Phones & cases', 'iPhones', 105000, '📱'],  // researched: "from" price, iPhone 16 128GB starts ~KSh 105,000. Set per model
+  ['iphone-case', 'Phones & cases', 'Premium iPhone Case', 1500, '📱'],  // estimate, confirm your price
+  ['case-with-car-logos', 'Phones & cases', 'Phone Case with Car Logos', 1500, '📱'],  // researched: Kenyan phone cases usually KSh 500-2,500
 ]
 
 export const products = rows.map(([key, cat, name, price, ico], id) => ({
