@@ -34,11 +34,14 @@ const rows = [
   ['lavalier-mic-2tx', 'Creator gear', 'Wireless Lavalier Microphone, 2 Transmitters', 4500, '🎙️'],  // estimate, confirm your price
   ['usbc-hub-7in1', 'Hubs & docks', '7-in-1 USB-C Hub', 4500, '🧩'],  // estimate, confirm your price
   ['wireless-mouse', 'Computer accessories', 'Wireless Mouse', 1500, '🖱️'],  // researched: basic wireless mice KSh 700-3,000; Logitech M170 ~KSh 1,400-1,600
+  ['laptop-stand-with-cooling-fan', 'Computer accessories', 'Laptop Stand with Cooling Fan', 3000, '💻'],  // researched: Jiji Kenya stands KSh 1,000-3,000; branded Green Lion ~KSh 4,300-4,800
   ['googlechrome-cast-tv-and-remote', 'TV & streaming', 'Google Chromecast with Google TV and Remote', 9500, '📺'],  // researched: Phoneplace Kenya listing (HD model)
   ['samsungs', 'Phones & cases', 'Samsung Galaxy Smartphones', 32000, '📱'],  // researched: "from" price, e.g. Galaxy A26 ~KSh 32,000-35,000; S25 starts ~KSh 108,000. Set per model
   ['iphones', 'Phones & cases', 'iPhones', 105000, '📱'],  // researched: "from" price, iPhone 16 128GB starts ~KSh 105,000. Set per model
   ['iphone-case', 'Phones & cases', 'Premium iPhone Case', 1500, '📱'],  // estimate, confirm your price
   ['case-with-car-logos', 'Phones & cases', 'Phone Case with Car Logos', 1500, '📱'],  // researched: Kenyan phone cases usually KSh 500-2,500
+  ['bebe-tab-kids-tablet', 'Tablets & watches', 'Bebe Tab Kids Tablet', 8500, '📱'],  // researched: Phoneplace Kenya, Bebe Tab Space-X 7-inch ~KSh 8,500; other Bebe models cost more. Set per model
+  ['apple-watch', 'Tablets & watches', 'Apple Watch', 50000, '⌚'],  // researched: "from" price, Series 10 ~KSh 50,000 in Nairobi; Series 11 starts ~KSh 68,000. Set per model
 ]
 
 export const products = rows.map(([key, cat, name, price, ico], id) => ({
