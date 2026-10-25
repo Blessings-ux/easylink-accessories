@@ -61,7 +61,10 @@ footer{padding:26px 0 40px;color:var(--mute);font-size:14px;text-align:center}
 #scrim{position:fixed;inset:0;background:#0006;z-index:9;display:none}#scrim.open{display:block}
 @media(max-width:720px){.hero{grid-template-columns:1fr;padding-top:28px}.hero img{grid-row:1;width:150px}.brand span{display:none}.bar{flex-wrap:wrap}.search{order:3;flex-basis:100%}.bar .cartbtn{margin-left:auto}}
 @media (prefers-reduced-motion:reduce){#drawer{transition:none}html{scroll-behavior:auto}}
-.thumb img{width:100%;height:100%;object-fit:contain;padding:10px;background:#fff}
+
+/* Product photos: fixed-size box, photo sits inside without stretching the card */
+.thumb{overflow:hidden}
+.thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:10px;background:#fff}
 
 .brand img{height:46px;width:auto;mix-blend-mode:normal;border-radius:0}
 
